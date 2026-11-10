@@ -64,6 +64,18 @@ mcpdev --format json version
 
 JSON `result` includes `version`, `commit`, `build_time`, `build_time_policy`, `snapshot_schema` (currently `1`), `goos`, and `goarch`. A snapshot file from an older mcpdev that writes a greater `schema_version` is rejected rather than guessed.
 
+## GitHub Actions
+
+[`phillarmonic/setup-mcpdev`](https://github.com/phillarmonic/setup-mcpdev) installs the release archive on a runner, verifies it against `SHA256SUMS`, and adds it to `PATH`:
+
+```yaml
+- uses: phillarmonic/setup-mcpdev@v1
+  with:
+    version: 'v0.1.0'
+```
+
+Inputs, outputs, and CI examples are in [GitHub Actions](../guides/github-actions.md).
+
 ## Platform notes
 
 Stdio children are launched as argv (no shell). Paths with spaces are one argv slot. On Unix, the child is a new process group (`Setpgid`). On Windows, `CREATE_NEW_PROCESS_GROUP` is set and `os.Process.Signal` / `Kill` are used; shutdown still closes stdin first. Helper and fixture binaries built in tests use a `.exe` suffix on Windows so `go build -o` and `exec` refer to the same path.

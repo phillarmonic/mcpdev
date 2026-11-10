@@ -1,5 +1,7 @@
 # mcpdev
 
+Documentation: [phillarmonic.github.io/mcpdev](https://phillarmonic.github.io/mcpdev/)
+
 Connect to a changing MCP binary or HTTP endpoint, inspect it, call it, snapshot and semantically diff its public interface, and watch rebuilds without restarting an AI harness.
 
 mcpdev is a Go command-line client. It treats MCP **2025-11-25** (stateful initialize) and **2026-07-28** (stateless per-request `_meta`) as distinct wire eras. Built-in transports are **stdio** and **Streamable HTTP**. gRPC is not a standard MCP transport. There is no browser UI, hosted tunnel, or background daemon.
@@ -22,6 +24,8 @@ go install ./cmd/mcpdev
 ```
 
 Checksummed release archives, `mcpdev version` JSON fields, and Windows `.exe` notes are in [Installation](docs/reference/installation.md).
+
+In GitHub Actions, [`phillarmonic/setup-mcpdev`](https://github.com/phillarmonic/setup-mcpdev) installs the same archive and verifies it against `SHA256SUMS`. See [GitHub Actions](docs/guides/github-actions.md).
 
 ## Quick start
 
@@ -79,6 +83,7 @@ The Zensical site is built from `docs/` (`xdrun ci` includes a strict docs build
 | Topic | Page |
 | --- | --- |
 | Install and `version` | [Installation](docs/reference/installation.md) |
+| Install the release binary in CI | [GitHub Actions](docs/guides/github-actions.md) |
 | Commands, stdout/stderr, exit classes | [CLI](docs/reference/cli.md) |
 | Protocol eras and fallback | [Compatibility](docs/reference/compatibility.md) |
 | Inspect | [Inspect a server](docs/guides/inspect.md) |

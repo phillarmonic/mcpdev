@@ -18,7 +18,7 @@ mcpdev --profile local test ./testdata/scenarios
 mcpdev --format json --jobs 2 --junit ./tmp/junit.xml test ./suite.yaml
 ```
 
-Human stdout is one line per suite and case, including elapsed time. A non-passing case adds one indented line per failed or skipped assertion naming the kind, path, and diff (or reason), so the mismatch is visible without `--format json`. `--format json` writes a single envelope (`ok`, `command`, `incomplete`, `result.suites`). Suite, case, and step durations are integer `duration_ms` values (JSON v2 has no default for `time.Duration`). `--junit PATH` writes JUnit XML beside that. Assertion failures are JUnit `failure`; connection, protocol, and cleanup problems are JUnit `error`.
+Human stdout is one line per suite and case, including elapsed time. A non-passing case adds one indented line per failed or skipped assertion naming the kind, path, and diff (or reason), so the mismatch is visible without `--format json`. `--format json` writes a single envelope (`ok`, `command`, `incomplete`, `result.suites`). Suite, case, and step durations are integer `duration_ms` values (JSON v2 has no default for `time.Duration`). `--junit PATH` writes JUnit XML beside that. Assertion failures are JUnit `failure`; connection, protocol, and cleanup problems are JUnit `error`. In a workflow, [GitHub Actions](github-actions.md) installs the binary and the JUnit file uploads as an artifact.
 
 ## Failure classes
 

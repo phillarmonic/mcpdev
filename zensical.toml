@@ -108,6 +108,9 @@ Home = 'index.md'
 'Watch and rebuild' = 'guides/watch.md'
 
 [[project.nav.Guides]]
+'GitHub Actions' = 'guides/github-actions.md'
+
+[[project.nav.Guides]]
 Troubleshooting = 'guides/troubleshooting.md'
 
 [[project.nav]]

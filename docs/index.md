@@ -63,6 +63,7 @@ instead of parsing stderr.
 | Watch a rebuild and reconnect | [Watch and rebuild](guides/watch.md) |
 | See the wire exchange on stderr | [Protocol tracing](guides/tracing.md) |
 | Debug framing, auth, or timeouts | [Troubleshooting](guides/troubleshooting.md) |
+| Install the release binary in CI | [GitHub Actions](guides/github-actions.md) |
 
 ## Reference
 

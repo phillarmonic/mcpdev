@@ -59,7 +59,7 @@ mcpdev diff --from-url http://127.0.0.1:8080/mcp --to-url http://127.0.0.1:8081/
 
 ## CI example
 
-Commit a baseline next to the server, rebuild in CI, then fail the job only when the public interface moved past the threshold:
+Commit a baseline next to the server, rebuild in CI, then fail the job only when the public interface moved past the threshold. Install the CLI first with [`phillarmonic/setup-mcpdev`](https://github.com/phillarmonic/setup-mcpdev); see [GitHub Actions](github-actions.md).
 
 ```yaml
 - name: Interface regression
