@@ -258,7 +258,7 @@ func TestCloseDuringProbe(t *testing.T) {
 			t.Fatal(err)
 		}
 		synctest.Wait()
-		<-done
+		<-done //nolint:errcheck // Swap races Close; the test asserts live state, not its error.
 		if l.liveCount() != 0 {
 			t.Fatalf("live %d", l.liveCount())
 		}

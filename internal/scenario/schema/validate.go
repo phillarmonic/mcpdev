@@ -272,20 +272,20 @@ func validateStep(path string, st Step, s Suite, captured map[string]string, see
 			issues = append(issues, Issue{Path: path + "/expect_failure/category", Message: "unknown error category"})
 		}
 	}
-	for i, cap := range st.Capture {
+	for i, capture := range st.Capture {
 		cp := fmt.Sprintf("%s/capture/%d", path, i)
-		if !identRE.MatchString(cap.Name) {
+		if !identRE.MatchString(capture.Name) {
 			issues = append(issues, Issue{Path: cp + "/name", Message: "must be a simple identifier"})
-		} else if _, exists := s.Variables[cap.Name]; exists {
+		} else if _, exists := s.Variables[capture.Name]; exists {
 			issues = append(issues, Issue{Path: cp + "/name", Message: "collides with a suite variable"})
-		} else if _, exists := s.Secrets[cap.Name]; exists {
+		} else if _, exists := s.Secrets[capture.Name]; exists {
 			issues = append(issues, Issue{Path: cp + "/name", Message: "collides with a secret name"})
-		} else if prev, ok := captured[cap.Name]; ok {
+		} else if prev, ok := captured[capture.Name]; ok {
 			issues = append(issues, Issue{Path: cp + "/name", Message: "already captured at " + prev})
 		} else {
-			captured[cap.Name] = cp
+			captured[capture.Name] = cp
 		}
-		issues = append(issues, validateJSONPath(cp+"/path", cap.Path)...)
+		issues = append(issues, validateJSONPath(cp+"/path", capture.Path)...)
 	}
 	for i, a := range st.Assert {
 		issues = append(issues, validateAssertion(fmt.Sprintf("%s/assert/%d", path, i), a, s, captured)...)

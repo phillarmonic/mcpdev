@@ -79,22 +79,22 @@ func runStep(ctx context.Context, deps Deps, sess port.Session, target port.Targ
 	}
 	doc["captured"] = captureMap(b)
 
-	for _, cap := range st.Capture {
+	for _, capture := range st.Capture {
 		if rep.Status == statusError {
 			break
 		}
-		matches, err := assert.Select(doc, cap.Path)
+		matches, err := assert.Select(doc, capture.Path)
 		if err != nil || len(matches) == 0 {
 			rep.Status = statusError
 			rep.Category = "incomplete"
-			rep.Message = fmt.Sprintf("capture %s: missing %s", cap.Name, cap.Path)
+			rep.Message = fmt.Sprintf("capture %s: missing %s", capture.Name, capture.Path)
 			break
 		}
 		val := matches[0]
 		if len(matches) > 1 {
 			val = matches
 		}
-		b.capture[cap.Name] = val
+		b.capture[capture.Name] = val
 	}
 	doc["captured"] = captureMap(b)
 

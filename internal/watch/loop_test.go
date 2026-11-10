@@ -43,7 +43,9 @@ func TestEditorBurstOneBuild(t *testing.T) {
 			t.Fatalf("batch len %d", len(batch))
 		}
 		cancel()
-		<-done
+		if err := <-done; !errors.Is(err, context.Canceled) {
+			t.Fatalf("run: %v", err)
+		}
 		select {
 		case extra := <-builds:
 			t.Fatalf("extra build %#v", extra)
@@ -114,7 +116,9 @@ func TestChangesDuringBuildOneFollowUp(t *testing.T) {
 			t.Fatalf("follow-up finished %d", got)
 		}
 		cancel()
-		<-done
+		if err := <-done; !errors.Is(err, context.Canceled) {
+			t.Fatalf("run: %v", err)
+		}
 	})
 }
 
@@ -196,7 +200,9 @@ func TestIgnoredPathDoesNotBuild(t *testing.T) {
 		default:
 		}
 		cancel()
-		<-done
+		if err := <-done; !errors.Is(err, context.Canceled) {
+			t.Fatalf("run: %v", err)
+		}
 	})
 }
 
