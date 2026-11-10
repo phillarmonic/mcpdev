@@ -8,7 +8,9 @@ project "mcpdev" version "0.1.0":
   requires tools:
     go
     uv
-    golangci-lint provision
+    # Pinned to the same version release.yml installs, so `xdrun lint` on a
+    # laptop reports what CI reports. A patch bump here is a deliberate change.
+    golangci-lint >= "2.15.0" <= "2.15.0" provision
     gosec provision
     govulncheck provision
 
