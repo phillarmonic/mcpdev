@@ -40,7 +40,7 @@ func Connect(ctx context.Context, stream Stream, opts Options) (port.Session, er
 		ident.Name = "mcpdev"
 	}
 	if ident.Version == "" {
-		ident.Version = "0.1.0"
+		ident.Version = "0.1.1"
 	}
 	requested := requestedVersion(opts.PreferEra)
 	var decision Decision

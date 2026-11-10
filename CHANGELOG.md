@@ -10,4 +10,15 @@ Keep this file in reverse chronological order. Every release that changes the MC
 
 ### Changed
 
+## 0.1.1 - 2026-11-10
+
+### Fixed
+
+- Stdio shutdown errors and watch notes include the child's stderr tail when the child dies during shutdown.
+
+### Changed
+
+- The macOS and Windows matrix jobs run on pushes to `master`, not only on pull requests.
+- The [`setup-mcpdev`](https://github.com/phillarmonic/setup-mcpdev) GitHub Action is documented in [GitHub Actions](docs/guides/github-actions.md) and linked from the README.
+
 

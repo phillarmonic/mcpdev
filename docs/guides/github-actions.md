@@ -27,12 +27,12 @@ The action tag and the mcpdev version are separate. `with.version` selects the C
 | --- | --- |
 | `latest` (default) | Newest stable release |
 | `v0` or `v0.1` | Newest release on that line |
-| `v0.1.0` | Exact tag |
+| `v0.1.1` | Exact tag |
 
 ```yaml
 - uses: phillarmonic/setup-mcpdev@v1
   with:
-    version: 'v0.1.0'
+    version: 'v0.1.1'
 ```
 
 Supported targets are Linux, macOS, and Windows on amd64 and arm64: `mcpdev_<version>_<os>_<arch>.tar.gz`, or `.zip` on Windows. Archive contents and build-time policy are in [Installation](../reference/installation.md).
@@ -41,7 +41,7 @@ Supported targets are Linux, macOS, and Windows on amd64 and arm64: `mcpdev_<ver
 
 | Output | Meaning |
 | --- | --- |
-| `version` | Installed binary version, without the `v` prefix (`0.1.0`) |
+| `version` | Installed binary version, without the `v` prefix (`0.1.1`) |
 | `path` | Absolute path to the installed binary |
 | `cache-hit` | Whether the binary came from the action cache |
 

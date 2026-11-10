@@ -26,7 +26,7 @@ func RequestMeta(ident model.Identity, version string) map[string]any {
 	}
 	ver := ident.Version
 	if ver == "" {
-		ver = "0.1.0"
+		ver = "0.1.1"
 	}
 	info := map[string]any{"name": name, "version": ver}
 	if ident.Title != "" {

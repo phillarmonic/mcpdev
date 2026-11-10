@@ -15,10 +15,10 @@ go install github.com/phillarmonic/mcpdev/cmd/mcpdev@latest
 Pin a release tag when you need a known snapshot schema and protocol matrix:
 
 ```bash
-go install github.com/phillarmonic/mcpdev/cmd/mcpdev@v0.1.0
+go install github.com/phillarmonic/mcpdev/cmd/mcpdev@v0.1.1
 ```
 
-`go install` does not apply the release `-ldflags`. Identity then comes from `runtime/debug.ReadBuildInfo`: module version, `vcs.revision`, and `vcs.time` (policy `vcs_time`). `go run` reports version `0.1.0` with policy `unknown`. `xdrun build` runs `go build`, so in a Git checkout Go's VCS stamping fills those keys: the version becomes a pseudo-version such as `0.0.0-20261110195728-cb5bf007d015`, `commit` is the full revision, `build_time` is the commit time, and the policy is `vcs_time`.
+`go install` does not apply the release `-ldflags`. Identity then comes from `runtime/debug.ReadBuildInfo`: module version, `vcs.revision`, and `vcs.time` (policy `vcs_time`). `go run` reports version `0.1.1` with policy `unknown`. `xdrun build` runs `go build`, so in a Git checkout Go's VCS stamping fills those keys: the version becomes a pseudo-version such as `0.0.0-20261110195728-cb5bf007d015`, `commit` is the full revision, `build_time` is the commit time, and the policy is `vcs_time`.
 
 From a checkout:
 
@@ -71,7 +71,7 @@ JSON `result` includes `version`, `commit`, `build_time`, `build_time_policy`, `
 ```yaml
 - uses: phillarmonic/setup-mcpdev@v1
   with:
-    version: 'v0.1.0'
+    version: 'v0.1.1'
 ```
 
 Inputs, outputs, and CI examples are in [GitHub Actions](../guides/github-actions.md).

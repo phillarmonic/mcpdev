@@ -121,7 +121,7 @@ func (s Store) generator() string {
 	if s.Version != "" {
 		return s.Version
 	}
-	return "0.1.0"
+	return "0.1.1"
 }
 
 func validatedPath(path string) (string, error) {

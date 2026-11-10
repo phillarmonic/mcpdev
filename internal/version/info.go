@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	defaultVersion = "0.1.0"
+	defaultVersion = "0.1.1"
 	unknown        = "unknown"
 
 	// PolicyUnknown means this binary was not stamped (typical `go run` / local build).
