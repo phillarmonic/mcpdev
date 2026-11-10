@@ -6,6 +6,8 @@ Keep this file in reverse chronological order. Every release that changes the MC
 
 ### Added
 
+- An [AI agents](docs/guides/ai-agents.md) guide describing the public `mcpdev` Repertoire skill, the managed `AGENTS.md` pointer, and the `setup-mcpdev` action it shares a release with.
+
 ### Fixed
 
 - A stdio child that exits before writing JSON-RPC now reports a connection failure when the OS closes the pipe first, instead of an internal error.

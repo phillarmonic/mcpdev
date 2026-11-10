@@ -40,3 +40,5 @@ Unavailable assertions are `skip` records, never a pass. Cancel and recovered pa
 
 For protocol regressions without a live server, use [Replay fixtures](replay.md) (`--replay` / `--record`).
 Official MCP requirement sets are a separate signal; they are not `mcpdev test` and they are not part of `xdrun ci`. See [Official MCP conformance](../contributing/conformance.md).
+
+Writing suites with an agent? The [`mcpdev` skill](ai-agents.md) carries the assertion envelope, the failure classes, and copyable smoke and error templates.

@@ -111,6 +111,9 @@ Home = 'index.md'
 'GitHub Actions' = 'guides/github-actions.md'
 
 [[project.nav.Guides]]
+'AI agents' = 'guides/ai-agents.md'
+
+[[project.nav.Guides]]
 Troubleshooting = 'guides/troubleshooting.md'
 
 [[project.nav]]

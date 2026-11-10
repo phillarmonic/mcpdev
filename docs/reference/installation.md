@@ -28,6 +28,16 @@ xdrun install
 go install ./cmd/mcpdev
 ```
 
+Using an AI coding agent? The [`mcpdev` skill](https://github.com/phillarmonic/ai-skills/tree/master/skills/mcpdev)
+carries the CLI contract, copyable profiles, and scenario templates, and
+installs with Repertoire:
+
+```bash
+repertoire add mcpdev --catalog phillarmonic
+```
+
+See [AI agents](../guides/ai-agents.md).
+
 ## Release archives
 
 GitHub Releases attach checksummed archives named

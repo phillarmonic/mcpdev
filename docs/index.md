@@ -10,6 +10,9 @@ It treats MCP **2025-11-25** (stateful `initialize`) and **2026-07-28**
 (stateless per-request `_meta`) as distinct wire eras. Protocol eras and
 fallback rules are defined in [Compatibility](reference/compatibility.md).
 
+An [AI agent skill](guides/ai-agents.md) teaches an assistant the CLI contract,
+so it reaches for `mcpdev` instead of writing a throwaway client.
+
 ## Install
 
 Requires Go 1.27. Linux, macOS, and Windows are supported on amd64 and arm64.
@@ -64,6 +67,7 @@ instead of parsing stderr.
 | See the wire exchange on stderr | [Protocol tracing](guides/tracing.md) |
 | Debug framing, auth, or timeouts | [Troubleshooting](guides/troubleshooting.md) |
 | Install the release binary in CI | [GitHub Actions](guides/github-actions.md) |
+| Drive the CLI from an AI agent | [AI agents](guides/ai-agents.md) |
 
 ## Reference
 
@@ -86,6 +90,9 @@ instead of parsing stderr.
 - End-to-end stdio loop: [Stdio developer loop](tutorials/stdio-loop.md).
 
 ## Development
+
+Automation uses [drun](https://github.com/phillarmonic/drun) and its `xdrun`
+interpreter (spec: `.drun/spec.drun`).
 
 ```bash
 xdrun --list

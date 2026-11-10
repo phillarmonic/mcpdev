@@ -2,6 +2,8 @@
 
 Documentation: [phillarmonic.github.io/mcpdev](https://phillarmonic.github.io/mcpdev/)
 
+AI agent skill: [`mcpdev`](https://github.com/phillarmonic/ai-skills/tree/master/skills/mcpdev) — install with [Repertoire](https://github.com/phillarmonic/repertoire-ai)
+
 Connect to a changing MCP binary or HTTP endpoint, inspect it, call it, snapshot and semantically diff its public interface, and watch rebuilds without restarting an AI harness.
 
 mcpdev is a Go command-line client. It treats MCP **2025-11-25** (stateful initialize) and **2026-07-28** (stateless per-request `_meta`) as distinct wire eras. Built-in transports are **stdio** and **Streamable HTTP**. gRPC is not a standard MCP transport. There is no browser UI, hosted tunnel, or background daemon.
@@ -26,6 +28,26 @@ go install ./cmd/mcpdev
 Checksummed release archives, `mcpdev version` JSON fields, and Windows `.exe` notes are in [Installation](docs/reference/installation.md).
 
 In GitHub Actions, [`phillarmonic/setup-mcpdev`](https://github.com/phillarmonic/setup-mcpdev) installs the same archive and verifies it against `SHA256SUMS`. See [GitHub Actions](docs/guides/github-actions.md).
+
+## Use it from an AI agent
+
+mcpdev is built to be driven by an agent: one command is one connection, results
+go to stdout, diagnostics go to stderr, and every outcome is an exit class rather
+than a message to parse.
+
+The [`mcpdev` skill](https://github.com/phillarmonic/ai-skills/tree/master/skills/mcpdev)
+carries the CLI contract, copyable `mcpdev.toml` profiles, smoke and error suites,
+and the protocol/failure reference. Install it with
+[Repertoire](https://github.com/phillarmonic/repertoire-ai), the package manager
+for portable agent skills:
+
+```bash
+repertoire add mcpdev --catalog phillarmonic
+```
+
+The skill also writes an `AGENTS.md` pointer, so a repository that declares it
+tells its agent when to load `mcpdev`. Targets, updates, and the package
+contents: [AI agents](docs/guides/ai-agents.md).
 
 ## Quick start
 
@@ -84,6 +106,7 @@ The Zensical site is built from `docs/` (`xdrun ci` includes a strict docs build
 | --- | --- |
 | Install and `version` | [Installation](docs/reference/installation.md) |
 | Install the release binary in CI | [GitHub Actions](docs/guides/github-actions.md) |
+| Drive the CLI from an AI agent | [AI agents](docs/guides/ai-agents.md) |
 | Commands, stdout/stderr, exit classes | [CLI](docs/reference/cli.md) |
 | Protocol eras and fallback | [Compatibility](docs/reference/compatibility.md) |
 | Inspect | [Inspect a server](docs/guides/inspect.md) |
@@ -95,6 +118,8 @@ The Zensical site is built from `docs/` (`xdrun ci` includes a strict docs build
 The site index groups every page by task: [docs/index.md](docs/index.md).
 
 ## Development
+
+Repository automation is defined with [drun](https://github.com/phillarmonic/drun), which provides the `xdrun` interpreter. The spec lives in `.drun/spec.drun`; the drun skill is part of the same [Repertoire](https://github.com/phillarmonic/repertoire-ai) catalog as `mcpdev`.
 
 ```bash
 xdrun --list
