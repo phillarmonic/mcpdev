@@ -3,6 +3,7 @@ package process
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"io"
 	"os"
 	"os/exec"
@@ -88,7 +89,8 @@ func TestPathWithSpacesAndEnvOverride(t *testing.T) {
 	if err := os.Mkdir(dir, 0o750); err != nil {
 		t.Fatal(err)
 	}
-	spaced := filepath.Join(dir, "helper bin")
+	// Windows resolves executables by PATHEXT, so the copy needs the .exe suffix.
+	spaced := platform.BuildPath(dir, "helper bin")
 	data, readErr := os.ReadFile(bin)
 	if readErr != nil {
 		t.Fatal(readErr)
@@ -124,8 +126,23 @@ func TestCwd(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if !bytes.Contains(line, []byte(dir)) {
-		t.Fatalf("cwd line %s", line)
+	var got struct {
+		Cwd string `json:"cwd"`
+	}
+	if unmarshalErr := json.Unmarshal(line, &got); unmarshalErr != nil {
+		t.Fatalf("cwd line %s: %v", line, unmarshalErr)
+	}
+	// Windows reports the 8.3 short form of a temp path; compare the file identity.
+	want, err := os.Stat(dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	have, err := os.Stat(got.Cwd)
+	if err != nil {
+		t.Fatalf("cwd %q: %v", got.Cwd, err)
+	}
+	if !os.SameFile(want, have) {
+		t.Fatalf("cwd %q is not %q", got.Cwd, dir)
 	}
 }
 
