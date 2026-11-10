@@ -129,8 +129,8 @@ func TestCwd(t *testing.T) {
 	var got struct {
 		Cwd string `json:"cwd"`
 	}
-	if err := json.Unmarshal(line, &got); err != nil {
-		t.Fatalf("cwd line %s: %v", line, err)
+	if unmarshalErr := json.Unmarshal(line, &got); unmarshalErr != nil {
+		t.Fatalf("cwd line %s: %v", line, unmarshalErr)
 	}
 	// Windows reports the 8.3 short form of a temp path; compare the file identity.
 	want, err := os.Stat(dir)

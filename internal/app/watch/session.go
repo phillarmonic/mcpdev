@@ -3,6 +3,7 @@ package watch
 import (
 	"context"
 	"errors"
+	"slices"
 	"strconv"
 	"strings"
 	"sync/atomic"
@@ -214,8 +215,7 @@ func errString(err error) string {
 		return ""
 	}
 	msg := err.Error()
-	var rec diagnostic.Record
-	if errors.As(err, &rec) {
+	if rec, ok := errors.AsType[diagnostic.Record](err); ok {
 		if tail := stderrTail(rec.ChildStderr); tail != "" {
 			msg += ": child stderr: " + tail
 		}
@@ -227,8 +227,8 @@ func errString(err error) string {
 func stderrTail(s string) string {
 	const limit = 240
 	lines := strings.Split(strings.TrimSpace(s), "\n")
-	for i := len(lines) - 1; i >= 0; i-- {
-		line := strings.TrimSpace(lines[i])
+	for _, raw := range slices.Backward(lines) {
+		line := strings.TrimSpace(raw)
 		if line == "" {
 			continue
 		}
