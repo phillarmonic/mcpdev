@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"strconv"
+	"strings"
 	"sync/atomic"
 	"time"
 
 	"github.com/phillarmonic/mcpdev/internal/clock"
+	"github.com/phillarmonic/mcpdev/internal/diagnostic"
 	"github.com/phillarmonic/mcpdev/internal/errclass"
 	"github.com/phillarmonic/mcpdev/internal/port"
 	fswatch "github.com/phillarmonic/mcpdev/internal/watch"
@@ -107,7 +109,7 @@ func (s *Session) boot(ctx context.Context, clk port.Clock, onSuccess OnSuccess)
 	s.emit(clk, fswatch.Note{Kind: fswatch.KindRestart, State: "starting", Generation: gen})
 	s.emit(clk, fswatch.Note{Kind: fswatch.KindNegotiate, State: "handshake", Generation: gen})
 	if err := s.Ports.Promote(ctx, gen, ""); err != nil {
-		s.emit(clk, fswatch.Note{Kind: fswatch.KindRecovery, State: "failed", Generation: gen, Message: err.Error(), Incomplete: true})
+		s.emit(clk, fswatch.Note{Kind: fswatch.KindRecovery, State: "failed", Generation: gen, Message: errString(err), Incomplete: true})
 		if s.FailFast {
 			return err
 		}
@@ -164,7 +166,7 @@ func (s *Session) cycle(ctx context.Context, clk port.Clock, onSuccess OnSuccess
 	s.emit(clk, fswatch.Note{Kind: fswatch.KindRestart, State: "starting", Generation: gen})
 	s.emit(clk, fswatch.Note{Kind: fswatch.KindNegotiate, State: "handshake", Generation: gen})
 	if err := s.Ports.Promote(ctx, gen, report.Log); err != nil {
-		s.emit(clk, fswatch.Note{Kind: fswatch.KindRecovery, State: "failed", Generation: gen, Message: err.Error(), Incomplete: true})
+		s.emit(clk, fswatch.Note{Kind: fswatch.KindRecovery, State: "failed", Generation: gen, Message: errString(err), Incomplete: true})
 		if s.FailFast || isChangeExit(err) {
 			return err
 		}
@@ -204,11 +206,38 @@ func (s *Session) emit(clk port.Clock, n fswatch.Note) {
 	s.Emit(n)
 }
 
+// errString is the note message for err. A diagnostic that carries child stderr
+// adds the child's last stderr line, because the note is the only place a watch
+// user learns why a generation died.
 func errString(err error) string {
 	if err == nil {
 		return ""
 	}
-	return err.Error()
+	msg := err.Error()
+	var rec diagnostic.Record
+	if errors.As(err, &rec) {
+		if tail := stderrTail(rec.ChildStderr); tail != "" {
+			msg += ": child stderr: " + tail
+		}
+	}
+	return msg
+}
+
+// stderrTail is the last non-empty line of child stderr, bounded for a note.
+func stderrTail(s string) string {
+	const limit = 240
+	lines := strings.Split(strings.TrimSpace(s), "\n")
+	for i := len(lines) - 1; i >= 0; i-- {
+		line := strings.TrimSpace(lines[i])
+		if line == "" {
+			continue
+		}
+		if len(line) > limit {
+			return line[:limit] + "..."
+		}
+		return line
+	}
+	return ""
 }
 
 func firstErr(a, b error) error {

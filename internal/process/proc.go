@@ -82,7 +82,7 @@ func (p *Proc) Close(ctx context.Context) error {
 
 func (p *Proc) escalate(ctx context.Context) error {
 	if err := p.waitWithGrace(ctx); err == nil {
-		return p.wrapWait(p.waitErr)
+		return p.exitErr()
 	} else if errors.Is(err, ctx.Err()) && ctx.Err() != nil {
 		_ = p.kill()
 		<-p.waitDone
@@ -91,23 +91,33 @@ func (p *Proc) escalate(ctx context.Context) error {
 	}
 	_ = p.Signal(os.Interrupt)
 	if err := p.waitWithGrace(ctx); err == nil {
-		return p.wrapWait(p.waitErr)
+		return p.exitErr()
 	} else if errors.Is(err, ctx.Err()) && ctx.Err() != nil {
 		_ = p.kill()
 		<-p.waitDone
+		<-p.stderrDone
 		return connectionErr("process_shutdown", ctx.Err(), p.StderrText())
 	}
 	if err := p.kill(); err != nil && !alreadyDead(err) {
 		<-p.waitDone
+		<-p.stderrDone
 		return connectionErr("process_kill", err, p.StderrText())
 	}
 	select {
 	case <-p.waitDone:
-		return p.wrapWait(p.waitErr)
+		return p.exitErr()
 	case <-ctx.Done():
 		<-p.waitDone
+		<-p.stderrDone
 		return connectionErr("process_shutdown", ctx.Err(), p.StderrText())
 	}
+}
+
+// exitErr joins the stderr copy before classifying an exit so the diagnostic
+// carries the child's last words instead of an empty capture.
+func (p *Proc) exitErr() error {
+	<-p.stderrDone
+	return p.wrapWait(p.waitErr)
 }
 
 func (p *Proc) waitWithGrace(ctx context.Context) error {
