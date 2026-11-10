@@ -8,6 +8,8 @@ Keep this file in reverse chronological order. Every release that changes the MC
 
 ### Fixed
 
+- A stdio child that exits before writing JSON-RPC now reports a connection failure when the OS closes the pipe first, instead of an internal error.
+
 ### Changed
 
 ## 0.1.1 - 2026-11-10

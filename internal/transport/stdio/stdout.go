@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"io"
+	"os"
 	"unicode"
 
 	"github.com/phillarmonic/mcpdev/internal/errclass"
@@ -50,7 +51,11 @@ func (r *firstJSON) peek() error {
 			return nil
 		}
 		if err != nil {
-			if errors.Is(err, io.EOF) && r.buf.Len() == 0 {
+			// cmd.Wait closes a StdoutPipe as soon as the child exits, so an
+			// early exit can surface as a closed pipe instead of EOF. Both mean
+			// the child stopped before writing JSON-RPC, which is a connection
+			// failure rather than an internal one.
+			if errors.Is(err, io.EOF) || errors.Is(err, os.ErrClosed) || errors.Is(err, io.ErrClosedPipe) {
 				r.err = errclass.Connection{Err: errors.New("stdio: child exited before JSON-RPC stdout")}
 				return r.err
 			}
