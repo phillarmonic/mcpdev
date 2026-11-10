@@ -1,0 +1,5 @@
+version = 1
+insecure = true
+
+[profiles.remote]
+url = "http://10.0.0.5:8080/mcp"

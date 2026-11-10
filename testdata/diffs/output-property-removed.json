@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/output_schema/properties/ok","category":"removal","severity":"breaking","rationale":"Output property was removed.","before":{"type":"boolean"}}],"changed":true}

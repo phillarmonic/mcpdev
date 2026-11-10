@@ -1,0 +1,153 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  GOLANGCI_LINT_VERSION: v2.15.0
+  GOSEC_VERSION: v2.30.0
+  GOVULNCHECK_VERSION: v1.9.0
+
+jobs:
+  # A tag can point at any commit, so the release path re-runs the same gate a
+  # pull request passes before a single archive is built. `pack` waits on this
+  # job, so nothing is published from a commit that fails verification.
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+      # Pinned instead of `go install ...@latest` so a fresh drun release
+      # cannot break a release cut.
+      - name: Set up xdrun
+        uses: phillarmonic/setup-drun@v2
+        with:
+          version: v2
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          install-mode: binary
+          install-only: true
+          verify: false
+      - name: Cache Go build data
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: go-${{ runner.os }}-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            go-${{ runner.os }}-
+      - name: Download Go modules
+        run: go mod download
+      # gosec publishes release tarballs but no setup action, and govulncheck
+      # publishes no release assets at all, so both compile from source under a
+      # pin. The module cache makes that a cost only when a pin moves.
+      - name: Cache Go-installed tools
+        id: tools
+        uses: actions/cache@v6
+        with:
+          path: ~/go/bin
+          key: go-tools-${{ runner.os }}-${{ env.GOSEC_VERSION }}-${{ env.GOVULNCHECK_VERSION }}
+      - name: Install Go-installed tools
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@${{ env.GOSEC_VERSION }}
+          go install golang.org/x/vuln/cmd/govulncheck@${{ env.GOVULNCHECK_VERSION }}
+      - name: Verify
+        run: xdrun ci
+
+  pack:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+      - name: Cache Go build data
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: go-${{ runner.os }}-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            go-${{ runner.os }}-
+      # Warm the module cache once, so the build, security, and release steps
+      # all read from disk.
+      - name: Download Go modules
+        run: go mod download
+      # The action fetches the prebuilt binary for this platform and caches
+      # it, skipping a compile of golangci-lint and its dependency tree.
+      # install-only leaves the run itself to xdrun.
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          install-mode: binary
+          install-only: true
+          verify: false
+      # gosec publishes release tarballs but no setup action, and govulncheck
+      # publishes no release assets at all, so both compile from source under a
+      # pin. The module cache makes that a cost only when a pin moves.
+      - name: Cache Go-installed tools
+        id: tools
+        uses: actions/cache@v6
+        with:
+          path: ~/go/bin
+          key: go-tools-${{ runner.os }}-${{ env.GOSEC_VERSION }}-${{ env.GOVULNCHECK_VERSION }}
+      - name: Install Go-installed tools
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@${{ env.GOSEC_VERSION }}
+          go install golang.org/x/vuln/cmd/govulncheck@${{ env.GOVULNCHECK_VERSION }}
+      # Pinned instead of `go install ...@latest` so a fresh drun release
+      # cannot break a release cut.
+      - name: Set up xdrun
+        uses: phillarmonic/setup-drun@v2
+        with:
+          version: v2
+      - name: Pack archives and smoke inspect
+        env:
+          MCPDEV_VERSION: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || '' }}
+        run: xdrun pack
+      - uses: actions/upload-artifact@v6
+        with:
+          name: mcpdev-dist
+          path: dist/
+          if-no-files-found: error
+      - if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v3
+        with:
+          files: |
+            dist/*.tar.gz
+            dist/*.zip
+            dist/SHA256SUMS
+          generate_release_notes: true

@@ -1,0 +1,19 @@
+{
+  "package": "@modelcontextprotocol/conformance",
+  "version": "0.2.0-alpha.11",
+  "owner": "mcpdev maintainers",
+  "revisions": [
+    {
+      "requirements": "2025-11-25",
+      "fixture": "legacy-http",
+      "baseline": "testdata/conformance/baselines/2025-11-25.yml",
+      "rationale": "Score the stateful 2025-11-25 requirement set only against the matching Streamable HTTP fixture. Passing 2026-07-28 is not evidence for this revision."
+    },
+    {
+      "requirements": "2026-07-28",
+      "fixture": "modern-http",
+      "baseline": "testdata/conformance/baselines/2026-07-28.yml",
+      "rationale": "Score the stateless 2026-07-28 requirement set only against the matching Streamable HTTP fixture. Passing 2025-11-25 is not evidence for this revision."
+    }
+  ]
+}

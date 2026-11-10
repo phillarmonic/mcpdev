@@ -1,0 +1,20 @@
+version = 1
+protocol = "auto"
+timeout = "10s"
+format = "human"
+sensitive = ["X-Lab-Token"]
+
+[profiles.local]
+command = ["go", "run", "."]
+
+[profiles.http]
+url = "http://127.0.0.1:8080/mcp"
+
+[profiles.http.header_env]
+Authorization = "MCPDEV_TOKEN"
+
+[profiles.http.tls]
+ca_file = "/etc/ssl/certs/ca.pem"
+
+[profiles.custom]
+connector = "fake"

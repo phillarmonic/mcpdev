@@ -1,0 +1,85 @@
+schema_version: 1
+name: stdio-profile
+description: Representative inspect, call, prompt, read, and failure checks against the in-repo stdio fixture.
+target:
+  profile: lab
+protocol: auto
+defaults:
+  timeout: 10s
+  connect_timeout: 5s
+variables:
+  who: mcpdev
+secrets:
+  token:
+    from_env: MCPDEV_LAB_TOKEN
+setup:
+  - exec:
+      argv: ["go", "build", "-o", "./bin/stdio-lab", "./testdata/servers/stdio-lab"]
+cleanup:
+  - exec:
+      argv: ["go", "version"]
+cases:
+  - name: inspect-and-call
+    timeout: 15s
+    steps:
+      - id: inspect_tools
+        inspect:
+          kind: tools
+        capture:
+          - name: first_tool
+            path: $.result.tools[0].name
+        assert:
+          - contains:
+              path: $.result.tools[*].name
+              value: echo
+          - json_path:
+              path: $.result.tools
+              exists: true
+          - latency:
+              max: 3s
+      - id: echo_text
+        call:
+          tool: echo
+          arguments:
+            text: "token ${secrets.token}"
+        assert:
+          - equal:
+              path: $.ok
+              value: true
+          - schema:
+              path: $.result
+              schema:
+                type: object
+      - id: greet
+        prompt:
+          name: greet
+          arguments:
+            name: ${who}
+        assert:
+          - json_path:
+              path: $.result.messages
+              count: 1
+      - id: note_resource
+        read:
+          uri: fixture://stable/note
+        assert:
+          - content_type:
+              equals: text/plain
+      - id: item_template
+        read:
+          template: "fixture://items/{id}"
+          arguments:
+            id: n1
+        assert:
+          - json_path:
+              path: $.result
+              exists: true
+      - id: failing_tool
+        call:
+          tool: fail
+          arguments: {}
+        expect_failure:
+          category: tool_error
+        assert:
+          - error_category:
+              equals: tool_error

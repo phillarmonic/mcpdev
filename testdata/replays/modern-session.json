@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "kind": "mcpdev.replay",
+  "meta": {
+    "transport": "stdio",
+    "era": "2026-07-28",
+    "note": "session after successful modern discover"
+  },
+  "session": {
+    "era": "2026-07-28",
+    "handshake": "discover",
+    "discover_state": "ok",
+    "protocol_version": "2026-07-28",
+    "server_name": "fixture-lab",
+    "capabilities": { "tools": true }
+  },
+  "steps": [
+    {
+      "expect": { "method": "tools/list", "params": {} },
+      "deliver": [
+        {
+          "kind": "result",
+          "payload": {
+            "tools": [
+              { "name": "echo", "description": "echo arguments" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

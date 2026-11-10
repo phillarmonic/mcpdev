@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "stdio-echo",
+  "target": {
+    "command": ["go", "run", "./testdata/servers/stdio-lab"]
+  },
+  "protocol": "2026-07-28",
+  "cases": [
+    {
+      "name": "inspect-tools",
+      "steps": [
+        {
+          "inspect": { "kind": "tools" },
+          "assert": [
+            { "json_path": { "path": "$.result.tools", "exists": true } }
+          ]
+        }
+      ]
+    }
+  ]
+}

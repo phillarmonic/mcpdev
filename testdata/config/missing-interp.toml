@@ -1,0 +1,7 @@
+version = 1
+
+[profiles.remote]
+url = "https://mcp.example.com/mcp"
+
+[profiles.remote.headers]
+Authorization = "${MISSING_TOKEN:?}"

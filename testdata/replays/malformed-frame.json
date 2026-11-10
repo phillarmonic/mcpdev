@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "kind": "mcpdev.replay",
+  "meta": {
+    "transport": "stdio",
+    "note": "server writes a malformed JSON-RPC line"
+  },
+  "session": {
+    "era": "2025-11-25",
+    "handshake": "initialize",
+    "discover_state": "not_applicable"
+  },
+  "steps": [
+    {
+      "expect": { "method": "initialize" },
+      "deliver": [
+        { "kind": "malformed", "text": "{not-json" }
+      ]
+    }
+  ]
+}

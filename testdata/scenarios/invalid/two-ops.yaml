@@ -1,0 +1,11 @@
+schema_version: 1
+name: two-ops
+target:
+  profile: local
+cases:
+  - name: mixed
+    steps:
+      - inspect:
+          kind: tools
+        call:
+          tool: list_files

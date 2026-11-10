@@ -1,0 +1,35 @@
+schema_version: 1
+name: call-command-arg
+target:
+  command: ["go", "run", "./testdata/servers/stdio-lab"]
+protocol: auto
+cases:
+  - name: command-arg-is-tool-payload
+    steps:
+      - call:
+          tool: echo
+          arguments:
+            text: hi
+            command: testdata/mcpdev/fixtures/vendor/bin/phpunit
+        assert:
+          - equal:
+              path: $.ok
+              value: true
+          - equal:
+              path: $.result.text
+              value: hi
+          - equal:
+              path: $.result.isError
+              value: false
+      - call:
+          tool: fail
+          arguments:
+            command: testdata/mcpdev/fixtures/missing-interpreter
+        expect_failure:
+          category: tool_error
+        assert:
+          - error_category:
+              equals: tool_error
+          - equal:
+              path: $.result.isError
+              value: true

@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/input_schema/additionalProperties","category":"change","severity":"unknown","rationale":"additionalProperties presence changed; missing vs true vs false stay distinct.","after":false}],"changed":true}

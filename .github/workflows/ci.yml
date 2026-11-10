@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  GOLANGCI_LINT_VERSION: v2.15.0
+  GOSEC_VERSION: v2.30.0
+  GOVULNCHECK_VERSION: v1.9.0
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.state == 'open' && github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+      # Pinned instead of `go install ...@latest` so a fresh drun release
+      # cannot turn an unrelated pull request red.
+      - name: Set up xdrun
+        uses: phillarmonic/setup-drun@v2
+        with:
+          version: v2
+      # The action fetches the prebuilt binary for this platform and caches
+      # it, skipping a compile of golangci-lint and its dependency tree.
+      # install-only leaves the run itself to xdrun, so this step matches a
+      # laptop.
+      - name: Install golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          install-mode: binary
+          install-only: true
+          verify: false
+      - name: Cache Go build data
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: go-${{ runner.os }}-${{ hashFiles('go.sum') }}
+          restore-keys: |
+            go-${{ runner.os }}-
+      # Warm the restored module cache once, so xdrun's build, vet, test, and
+      # tool installs read from disk instead of fetching the same modules.
+      - name: Download Go modules
+        run: go mod download
+      # gosec publishes release tarballs but no setup action, and govulncheck
+      # publishes no release assets at all, so both compile from source under a
+      # pin. The module cache makes that a cost only when a pin moves.
+      - name: Cache Go-installed tools
+        id: tools
+        uses: actions/cache@v6
+        with:
+          path: ~/go/bin
+          key: go-tools-${{ runner.os }}-${{ env.GOSEC_VERSION }}-${{ env.GOVULNCHECK_VERSION }}
+      - name: Install Go-installed tools
+        if: steps.tools.outputs.cache-hit != 'true'
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@${{ env.GOSEC_VERSION }}
+          go install golang.org/x/vuln/cmd/govulncheck@${{ env.GOVULNCHECK_VERSION }}
+      - name: Verify
+        run: xdrun ci
+
+  matrix:
+    name: ${{ matrix.os }} process transport watch
+    runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.state == 'open' && github.event.pull_request.draft == false
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      # Deliberately go test rather than `xdrun matrix`: every task inherits
+      # the project-level `requires tools` list, so xdrun would provision
+      # golangci-lint, gosec, and govulncheck on three operating systems just
+      # to run platform tests. The package list mirrors the matrix task.
+      - name: Focused process, transport, and watch tests
+        run: go test ./internal/process ./internal/watch/... ./internal/transport/... ./internal/cli ./internal/config ./internal/platform ./internal/version ./internal/release ./internal/testkit

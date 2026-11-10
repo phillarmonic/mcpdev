@@ -1,0 +1,37 @@
+schema_version: 1
+name: assert-interp
+target:
+  command: ["go", "run", "./testdata/servers/stdio-lab"]
+protocol: auto
+cases:
+  - name: capture-then-assert
+    steps:
+      - call:
+          tool: echo
+          arguments:
+            text: hello-world
+        capture:
+          - name: echoed
+            path: $.result.text
+        assert:
+          - equal:
+              path: $.result.text
+              value: hello-world
+      - call:
+          tool: echo
+          arguments:
+            text: hello-world
+        assert:
+          - contains:
+              path: $.result.text
+              value: ${echoed}
+          - equal:
+              path: $.result.text
+              value: ${echoed}
+          - schema:
+              path: $.result
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string

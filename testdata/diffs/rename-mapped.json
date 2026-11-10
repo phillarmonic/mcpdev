@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo2/name","category":"change","severity":"breaking","rationale":"Mapped rename; remaining fields are compared as the same tool.","before":"echo","after":"echo2"}],"changed":true}

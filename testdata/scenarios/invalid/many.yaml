@@ -1,0 +1,12 @@
+schema_version: 9
+name: ""
+target:
+  profile: local
+  url: http://127.0.0.1:8080/mcp
+shell: echo pwned
+extra: true
+secrets:
+  token:
+    from_env: TOKEN
+    value: s3cret-must-not-load
+cases: []

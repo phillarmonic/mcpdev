@@ -1,0 +1,40 @@
+schema: 1
+tool: https://github.com/phillarmonic/repertoire-ai
+catalogs:
+  graphify:
+    source: https://github.com/phillarmonic/repertoire-graphify-skills.git
+    ref: master
+  phillarmonic-internal:
+    source: git@github.com:phillarmonic/phillarmonic-internal-ai-skills.git
+    ref: master
+skills:
+  common-stubs:
+    catalog: phillarmonic
+    scope: global
+    targets:
+      - agents
+  drun:
+    catalog: phillarmonic
+    scope: global
+    targets:
+      - agents
+  graphify:
+    catalog: graphify
+    scope: global
+    targets:
+      - agents
+  zensical:
+    catalog: phillarmonic
+    scope: global
+    targets:
+      - agents
+  zensical-glossary:
+    catalog: phillarmonic
+    scope: global
+    targets:
+      - agents
+  zensical-shiki:
+    catalog: phillarmonic-internal
+    scope: global
+    targets:
+      - agents

@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/input_schema/properties/n","category":"addition","severity":"breaking","rationale":"Required input property was added.","after":{"type":"number"}}],"changed":true}

@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/ping","category":"addition","severity":"additive","rationale":"Tool was added.","after":{"description":"","input_schema":{"type":"object"},"name":"ping","output_schema":null,"title":""}}],"changed":true}

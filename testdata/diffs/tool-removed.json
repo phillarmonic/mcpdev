@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo","category":"removal","severity":"breaking","rationale":"Tool was removed.","before":{"description":"","input_schema":{"properties":{"text":{"type":"string"}},"type":"object"},"name":"echo","output_schema":{"properties":{"ok":{"type":"boolean"}},"type":"object"},"title":"Echo"}}],"changed":true}

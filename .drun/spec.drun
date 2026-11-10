@@ -1,0 +1,84 @@
+# drun (do-run) CLI is a fast, semantic task runner with
+# its own powerful automation language. Effortless tasks, serious speed.
+# Learn more at https://github.com/phillarmonic/drun
+
+version: 2.0
+
+project "mcpdev" version "0.1.0":
+  requires tools:
+    go
+    uv
+    golangci-lint provision
+    gosec provision
+    govulncheck provision
+
+task "default" means "Show available project automation":
+  info "Run xdrun --list to inspect tasks"
+
+task "format" means "Format Go source files":
+  run "gofmt -w ."
+
+task "vet" means "Run Go static analysis":
+  run "go vet ./..."
+
+task "lint" means "Check formatting and lint Go source":
+  run "test -z \"$(gofmt -l .)\""
+  run "golangci-lint run ./..."
+
+task "test" means "Run the Go test suite":
+  run "go test ./..."
+
+task "build" means "Build the mcpdev binary into bin":
+  run "go build -trimpath -o bin/ ./cmd/mcpdev"
+
+task "install" means "Install the mcpdev CLI":
+  run "go install ./cmd/mcpdev"
+
+task "security" means "Run vulnerability and source security checks":
+  run "govulncheck ./..."
+  run "gosec -severity high -confidence medium ./..."
+
+task "docs" means "Serve documentation with live reload":
+  run "uv run zensical serve" attached
+
+task "docs:build" means "Build the documentation site":
+  run "uv run zensical build --clean --strict"
+
+task "graph" means "Refresh the project knowledge graph":
+  requires tools:
+    graphify
+  run "graphify update ."
+
+task "conformance" means "Score official MCP requirement sets per revision":
+  given $revision defaults to ""
+  requires tools:
+    go
+    node
+  info "Official conformance is a standards signal; it is not part of xdrun ci"
+  if $revision is "":
+    run "go run ./internal/conformance/cmd/run"
+  else:
+    set $rev to "{$revision}"
+    run "go run ./internal/conformance/cmd/run -revision {$rev}"
+
+task "integration" means "Opt-in laboratory loop tests":
+  requires tools:
+    go
+  info "Laboratory loops build and drive the in-repo stdio and HTTP fixtures"
+  run "go test ./internal/integration -count=1"
+  run "go test ./internal/cli -run TestWatchLabRebuildRestartReconnect -count=1"
+
+task "matrix" means "Run process, transport, and watch tests on this OS":
+  run "go test ./internal/process ./internal/watch/... ./internal/transport/... ./internal/cli ./internal/config ./internal/platform ./internal/version ./internal/release ./internal/testkit"
+
+task "pack" means "Build checksummed release archives into dist":
+  run "go run ./internal/release/cmd/pack"
+
+task "ci" mode "ci" means "Run all required project checks":
+  call task "vet"
+  call task "lint"
+  call task "test"
+  call task "build"
+  call task "security"
+  call task "docs:build"
+  success "All local verification tasks completed successfully."

@@ -1,0 +1,15 @@
+schema_version: 1
+name: missing-capture
+target:
+  profile: local
+cases:
+  - name: uses-unknown
+    steps:
+      - call:
+          tool: read_file
+          arguments:
+            filePath: ${missing}
+        assert:
+          - equal:
+              path: $.ok
+              value: true

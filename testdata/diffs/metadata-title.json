@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/title","category":"change","severity":"metadata","rationale":"Tool title changed.","before":"Echo","after":"Echo v2"}],"changed":true}

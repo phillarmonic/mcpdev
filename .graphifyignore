@@ -1,0 +1,31 @@
+# .graphifyignore — scopes what enters the mcpdev knowledge graph.
+# Do NOT duplicate .gitignore here; graphify already merges it. This file is
+# only for graph-scoping: what is project signal vs. generated/tool noise.
+
+# Generated output and dependency state
+.venv/
+bin/
+site/
+graphify-out/
+go.sum
+uv.lock
+
+# Editor and agent metadata (not project logic)
+.idea/
+.vscode/
+.agents/
+.codex/
+.claude/
+.cursor/
+.github/skills/
+.github/copilot-instructions.md
+repertoire.yaml
+repertoire.lock.json
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Generic or copied presentation assets (Zensical sample + Shiki toolbar)
+docs/markdown.md
+docs/stylesheets/shiki.css
+docs/javascripts/shiki.mjs

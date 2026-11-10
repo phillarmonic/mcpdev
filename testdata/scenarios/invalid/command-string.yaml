@@ -1,0 +1,9 @@
+schema_version: 1
+name: shell-command
+target:
+  command: go run .
+cases:
+  - name: x
+    steps:
+      - inspect:
+          kind: tools

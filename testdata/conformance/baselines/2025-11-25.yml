@@ -1,0 +1,42 @@
+# Owner: mcpdev maintainers
+# Package: @modelcontextprotocol/conformance@0.2.0-alpha.11
+# Requirements: 2025-11-25 (stateful initialize handshake)
+# Fixture: legacy-http
+# Rationale: The catalog HTTP fixture is a stable primitive lab for mcpdev,
+# not a complete MCP server. These official scenarios need logging, ping,
+# completions, richer tool/content types, elicitation, sampling, SSE, OAuth
+# DNS checks, or subscribe/unsubscribe that the fixture does not implement.
+# Do not copy entries from 2026-07-28.yml; a pass on the other wire is not
+# evidence for this revision. server-initialize is omitted because it passed
+# on this fixture at this pin.
+
+server:
+  - logging-set-level
+  - ping
+  - completion-complete
+  - tools-list
+  - tools-call-simple-text
+  - tools-call-image
+  - tools-call-audio
+  - tools-call-embedded-resource
+  - tools-call-mixed-content
+  - tools-call-with-logging
+  - tools-call-error
+  - tools-call-with-progress
+  - tools-call-sampling
+  - tools-call-elicitation
+  - elicitation-sep1034-defaults
+  - server-sse-multiple-streams
+  - elicitation-sep1330-enums
+  - resources-list
+  - resources-read-text
+  - resources-read-binary
+  - resources-templates-read
+  - resources-subscribe
+  - resources-unsubscribe
+  - prompts-list
+  - prompts-get-simple
+  - prompts-get-with-args
+  - prompts-get-embedded-resource
+  - prompts-get-with-image
+  - dns-rebinding-protection

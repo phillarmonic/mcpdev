@@ -1,0 +1,21 @@
+version = 1
+protocol = "auto"
+timeout = "30s"
+connect_timeout = "15s"
+
+# Opt-in stdio target for the in-repo fixture. Build it first:
+#   go build -o ./bin/stdio-lab ./testdata/servers/stdio-lab
+# Command and cwd resolve from the process working directory, so run mcpdev
+# from the repository root. Do not put a personal absolute path in this file.
+[profiles.lab]
+command = ["./bin/stdio-lab"]
+protocol = "2025-11-25"
+
+# HTTP profile for local Streamable HTTP labs. Set MCPDEV_LAB_URL and
+# MCPDEV_LAB_TOKEN in the process environment; tokens stay out of this file.
+[profiles.http]
+url = "${MCPDEV_LAB_URL:-http://127.0.0.1:9/mcp}"
+protocol = "2026-07-28"
+
+[profiles.http.header_env]
+Authorization = "MCPDEV_LAB_TOKEN"

@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "mcpdev.replay",
+  "meta": {
+    "transport": "http",
+    "era": "2025-11-25",
+    "note": "HTTP SSE event after tools/list"
+  },
+  "session": {
+    "era": "2025-11-25",
+    "handshake": "initialize",
+    "discover_state": "not_applicable",
+    "capabilities": { "tools": true }
+  },
+  "steps": [
+    {
+      "expect": { "method": "tools/list", "params": {} },
+      "deliver": [
+        {
+          "kind": "result",
+          "payload": { "tools": [{ "name": "echo" }] }
+        },
+        {
+          "kind": "sse",
+          "event": "message",
+          "payload": { "method": "notifications/tools/list_changed" }
+        }
+      ]
+    }
+  ]
+}

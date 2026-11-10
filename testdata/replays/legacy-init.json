@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "kind": "mcpdev.replay",
+  "meta": {
+    "transport": "stdio",
+    "era": "2025-11-25",
+    "protocol_version": "2025-11-25",
+    "note": "legacy initialize handshake, session already negotiated"
+  },
+  "session": {
+    "era": "2025-11-25",
+    "handshake": "initialize",
+    "discover_state": "not_applicable",
+    "protocol_version": "2025-11-25",
+    "server_name": "fixture-lab",
+    "capabilities": { "tools": true }
+  },
+  "steps": [
+    {
+      "expect": { "method": "tools/list", "params": {} },
+      "deliver": [
+        {
+          "kind": "result",
+          "payload": {
+            "tools": [
+              { "name": "echo", "description": "echo arguments" }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

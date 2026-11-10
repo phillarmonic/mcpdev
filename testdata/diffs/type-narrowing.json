@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/input_schema/properties/text/type","category":"change","severity":"breaking","rationale":"Type union was narrowed.","before":["null","string"],"after":"string"}],"changed":true}

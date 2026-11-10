@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "kind": "mcpdev.replay",
+  "meta": {
+    "transport": "stdio",
+    "era": "2025-11-25",
+    "note": "two-page tools/list"
+  },
+  "session": {
+    "era": "2025-11-25",
+    "handshake": "initialize",
+    "discover_state": "not_applicable",
+    "capabilities": { "tools": true }
+  },
+  "steps": [
+    {
+      "expect": { "method": "tools/list", "params": {} },
+      "deliver": [
+        {
+          "kind": "result",
+          "payload": {
+            "tools": [{ "name": "alpha" }],
+            "nextCursor": "page-2"
+          }
+        }
+      ]
+    },
+    {
+      "expect": { "method": "tools/list", "params": { "cursor": "page-2" } },
+      "deliver": [
+        {
+          "kind": "result",
+          "payload": {
+            "tools": [{ "name": "beta" }]
+          }
+        }
+      ]
+    }
+  ]
+}

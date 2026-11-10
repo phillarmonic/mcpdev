@@ -1,0 +1,1 @@
+{"verdict":"changed","changes":[{"path":"/tools/echo/input_schema/properties/text/enum","category":"change","severity":"breaking","rationale":"enum was narrowed.","before":["a","b"],"after":["a"]}],"changed":true}
