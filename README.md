@@ -127,3 +127,7 @@ xdrun ci
 ```
 
 `xdrun ci` is the required quality gate (format, vet, lint, tests, build, security, vulnerabilities, documentation). Do not tag, push, or publish from this workflow unless the repository owner asks for that specific action.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
