@@ -10,6 +10,28 @@ It treats MCP **2025-11-25** (stateful `initialize`) and **2026-07-28**
 (stateless per-request `_meta`) as distinct wire eras. Protocol eras and
 fallback rules are defined in [Compatibility](reference/compatibility.md).
 
+<div data-mermaid-fullscreen-callout="true" markdown>
+
+```mermaid
+flowchart LR
+  Server["MCP server<br/>stdio or Streamable HTTP<br/>wire era 2025-11-25 or 2026-07-28"]
+  CLI["mcpdev"]
+  Inspect["Inspect<br/>tools, prompts, resources"]
+  Operate["Call, prompt, read"]
+  Snap["Snapshot → Diff<br/>exit 40 on change"]
+  Test["Test<br/>scenario suites"]
+  Watch["Watch<br/>rebuild and reconnect"]
+
+  Server <--> CLI
+  CLI --> Inspect
+  CLI --> Operate
+  CLI --> Snap
+  CLI --> Test
+  CLI --> Watch
+```
+
+</div>
+
 An [AI agent skill](guides/ai-agents.md) teaches an assistant the CLI contract,
 so it reaches for `mcpdev` instead of writing a throwaway client.
 

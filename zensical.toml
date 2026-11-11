@@ -1,8 +1,23 @@
 [project]
-extra_css = ['stylesheets/shiki.css']
-extra_javascript = ['javascripts/shiki.mjs']
+copyright = 'Copyright &copy; 2026 Phillarmonic Software'
+extra_css = [
+  'stylesheets/phillarmonic.css',
+  'stylesheets/shiki.css',
+  'assets/components/mermaid-panzoom/styles.css',
+]
+extra_javascript = [
+  'javascripts/shiki.mjs',
+  { path = 'assets/components/mermaid-panzoom/index.js', type = 'module' },
+]
+repo_name = 'phillarmonic/mcpdev'
+repo_url = 'https://github.com/phillarmonic/mcpdev'
 site_description = 'Inspect, test, snapshot, and watch MCP servers from the command line.'
 site_name = 'mcpdev'
+site_url = 'https://phillarmonic.github.io/mcpdev/'
+
+[project.validation]
+invalid_link_anchors = true
+invalid_links = true
 
 [project.markdown_extensions]
 [project.markdown_extensions.admonition]
@@ -66,6 +81,11 @@ name = 'markdown'
 class = 'language-text'
 format = 'pymdownx.superfences.fence_code_format'
 name = 'text'
+
+[[project.markdown_extensions.pymdownx.superfences.custom_fences]]
+class = 'mermaid'
+format = 'pymdownx.superfences.fence_code_format'
+name = 'mermaid'
 
 [project.markdown_extensions.pymdownx.tabbed]
 alternate_style = true
@@ -156,6 +176,47 @@ Inventory = 'reference/inventory.md'
 'Official conformance' = 'contributing/conformance.md'
 
 [project.theme]
-features = ['content.code.copy', 'navigation.instant', 'navigation.sections']
+favicon = 'assets/favicon.png'
+features = [
+  'content.code.copy',
+  'content.code.select',
+  'content.tabs.link',
+  'navigation.footer',
+  'navigation.indexes',
+  'navigation.instant',
+  'navigation.path',
+  'navigation.sections',
+  'navigation.top',
+  'navigation.tracking',
+  'search.highlight',
+]
 language = 'en'
+logo = 'assets/phillarmonic-symbol.png'
 variant = 'modern'
+
+[project.theme.font]
+code = 'JetBrains Mono'
+text = 'Inter'
+
+[[project.theme.palette]]
+media = '(prefers-color-scheme)'
+
+[project.theme.palette.toggle]
+icon = 'lucide/sun-moon'
+name = 'Switch to light mode'
+
+[[project.theme.palette]]
+media = '(prefers-color-scheme: light)'
+scheme = 'default'
+
+[project.theme.palette.toggle]
+icon = 'lucide/sun'
+name = 'Switch to dark mode'
+
+[[project.theme.palette]]
+media = '(prefers-color-scheme: dark)'
+scheme = 'slate'
+
+[project.theme.palette.toggle]
+icon = 'lucide/moon'
+name = 'Switch to system preference'
